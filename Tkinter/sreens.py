@@ -1,6 +1,7 @@
 import tkinter as tk
-from tkinter import Image, ttk, filedialog
+from tkinter import Image, ttk, filedialog, messagebox
 from PIL import Image, ImageTk
+import requests
 
 
 class RegistrationScreen:
@@ -8,6 +9,7 @@ class RegistrationScreen:
         self.root = root
         self.root.title("Register")
         self.root.geometry("500x400")
+        self.profile_image = None
 
         # Левая панель с кнопками
         left_frame = ttk.Frame(self.root)
@@ -106,12 +108,16 @@ class RegistrationScreen:
         username = self.username_entry.get()
         email = self.email_entry.get()
         password = self.password_entry.get()
+        # Отправить данные на сервер
+        url = 'http://localhost:5000/register'
+        data = {'username': username, 'email': email, 'password': password, 'picture': '12'}
+        response = requests.post(url, json=data)
 
-        # Обработать регистрацию пользователя
-        # ...
-
-        # Отобразить сообщение об успешной регистрации
-        tk.messagebox.showinfo("Register", "Вы успешно зарегистрированы!")
+        # Проверить ответ от сервера
+        if response.status_code == 201:
+            messagebox.showinfo("Register", "Вы успешно зарегистрированы!")
+        else:
+            messagebox.showerror("Register", "Ошибка регистрации. Пожалуйста, попробуйте еще раз.")
 
 
 class LoginScreen:
