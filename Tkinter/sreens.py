@@ -171,11 +171,24 @@ class LoginScreen:
         username = self.username_entry.get()
         password = self.password_entry.get()
 
-        # Обработать вход пользователя
-        # ...
+        # Отправить запрос на сервер для аутентификации пользователя
+        url = 'http://localhost:5000/login'  # Замените 'your_server' на реальный адрес вашего сервера
+        data = {'username': username, 'password': password}
+        response = requests.post(url, json=data)
 
-        # Отобразить сообщение об успешном входе
-        tk.messagebox.showinfo("Вход", "Вы успешно вошли!")
+        # Проверить статус кода ответа
+        if response.status_code == 200:
+            # Извлечь токен доступа из ответа
+            access_token = response.json().get('access_token')
+
+            # Сохранить токен доступа в вашем приложении для последующего использования
+            # Например, вы можете сохранить его в глобальной переменной или в переменной экземпляра класса
+
+            # Показать сообщение об успешном входе
+            messagebox.showinfo("Вход", "Вы успешно вошли!")
+        else:
+            # Показать сообщение об ошибке
+            messagebox.showerror("Ошибка", "Неверное имя пользователя или пароль")
 
     def show_login_screen(self):
         # Destroy the current right_frame (of LoginScreen)
